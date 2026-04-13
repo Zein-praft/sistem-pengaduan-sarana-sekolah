@@ -18,13 +18,13 @@ Route::middleware(['auth.siswa'])->group(function () {
     Route::post('/aspirasi-siswa/logout', [AuthController::class, 'logoutSiswa'])->name('siswa.logout');
 });
 
-// --- AREA ADMIN ---
-// Halaman Login Admin
-Route::get('/admin', [AuthController::class, 'showLoginAdmin'])->name('admin.login');
-Route::post('/admin/login', [AuthController::class, 'loginAdmin'])->name('admin.login.proses');
+// Route Login Admin (Bisa diakses siapa saja)
+Route::get('/admin-login', [AuthController::class, 'showLoginAdmin'])->name('admin.login');
+Route::post('/admin-login', [AuthController::class, 'loginAdmin'])->name('admin.login.proses');
 
-// Dashboard Admin (Harus Login Bawaan Laravel)
+// Group Route Admin (Hanya bisa diakses kalau sudah login admin)
 Route::middleware(['auth'])->group(function () {
-    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
-    // Di sini nanti tempat Admin input Siswa (Nama, NIS, Kelas, Jurusan, Tgl Lahir)
+    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::post('/admin/tanggapi/{id}', [AdminController::class, 'updateStatus'])->name('admin.tanggapi');
+    Route::post('/admin/logout', [AuthController::class, 'logoutAdmin'])->name('admin.logout');
 });

@@ -39,10 +39,11 @@ class AuthController extends Controller
     }
 
     // Proses Login Admin (Pake Auth Bawaan Laravel)
-    public function loginAdmin(Request $request) {
+    public function loginAdmin(Request $request)
+    {
         $credentials = $request->validate([
             'email' => 'required|email',
-            'password' => 'required'
+            'password' => 'required',
         ]);
 
         if (Auth::attempt($credentials)) {
@@ -50,7 +51,14 @@ class AuthController extends Controller
             return redirect()->route('admin.dashboard');
         }
 
-        return back()->with('error', 'Email atau Password admin salah!');
+        return back()->with('error', 'Email atau password salah.');
+    }
+
+    public function logoutAdmin(Request $request) {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('admin.login');
     }
 
     // Logout Semua
