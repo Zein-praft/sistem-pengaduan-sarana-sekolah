@@ -9,6 +9,21 @@
     <style>
         .nav-pills .nav-link.active { background-color: #0d6efd; }
         .card { border-radius: 12px; }
+
+        .message-truncate {
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* Batasi maksimal 2 baris */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .btn-link-toggle {
+            display: block;
+            margin-top: 5px;
+            font-size: 0.8rem;
+            color: #0d6efd;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body class="bg-light">
@@ -69,8 +84,23 @@
                         <tbody>
                             @forelse($history as $item)
                             <tr>
-                                <td>{{ $item->created_at->format('d/m/Y') }}</td>
-                                <td>{{ \Illuminate\Support\Str::limit($item->message, 50) }}</td>
+                                <td class="text-nowrap">{{ $item->created_at->format('d/m/Y') }}</td>
+                                
+                                <td style="min-width: 250px;">
+                                    <div id="msg-siswa-{{ $item->id }}" class="message-truncate">
+                                        {{ $item->message }}
+                                    </div>
+                                    
+                                    @if(strlen($item->message) > 100)
+                                        <a href="javascript:void(0)" 
+                                        id="btn-siswa-{{ $item->id }}" 
+                                        onclick="toggleSiswa('{{ $item->id }}')" 
+                                        class="btn-link-toggle">
+                                        Lihat Selengkapnya
+                                        </a>
+                                    @endif
+                                </td>
+
                                 <td>
                                     <span class="badge {{ $item->status == 'selesai' ? 'bg-success' : ($item->status == 'proses' ? 'bg-warning text-dark' : 'bg-secondary') }}">
                                         {{ ucfirst($item->status) }}
@@ -80,10 +110,12 @@
                                     @if($item->status == 'menunggu')
                                     <form action="{{ route('siswa.delete', $item->id) }}" method="POST" onsubmit="return confirm('Hapus laporan ini?')">
                                         @csrf @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-trash"></i> Hapus
+                                        </button>
                                     </form>
                                     @else
-                                    <span class="text-muted small">Terkunci</span>
+                                    <span class="text-muted small"><i class="fas fa-lock"></i> Terkunci</span>
                                     @endif
                                 </td>
                             </tr>
@@ -121,5 +153,19 @@
     </div>
 </div>
 
+<script>
+    function toggleSiswa(id) {
+        const msg = document.getElementById('msg-siswa-' + id);
+        const btn = document.getElementById('btn-siswa-' + id);
+
+        if (msg.classList.contains('message-truncate')) {
+            msg.classList.remove('message-truncate');
+            btn.innerText = 'Lihat Lebih Sedikit';
+        } else {
+            msg.classList.add('message-truncate');
+            btn.innerText = 'Lihat Selengkapnya';
+        }
+    }
+</script>
 </body>
 </html>

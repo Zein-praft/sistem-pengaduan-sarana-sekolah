@@ -20,7 +20,7 @@
                         @csrf
                         <div class="mb-3">
                             <label>Email Address</label>
-                            <input type="email" name="email" class="form-control" placeholder="admin@gmail.com" required>
+                            <input type="email" name="email" class="form-control" placeholder="example@gmail.com" required>
                         </div>
                         <div class="mb-3">
                             <label>Password</label>
