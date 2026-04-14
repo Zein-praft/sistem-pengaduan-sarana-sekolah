@@ -13,14 +13,7 @@ class Pengaduan extends Model
     protected $table = 'pengaduans';
 
     // Kolom yang boleh diisi (Mass Assignment)
-    protected $fillable = [
-        'student_id', 
-        'category_id', 
-        'message', 
-        'date',
-        'status', 
-        'feedback'
-    ];
+    protected $fillable = ['siswa_id', 'message', 'status', 'feedback', 'date'];
 
     /**
      * Relasi ke Siswa

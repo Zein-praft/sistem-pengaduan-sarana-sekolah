@@ -39,7 +39,7 @@ class AspirasiController extends Controller
     {
         // 1. Validasi input
         $request->validate([
-            'message' => 'required|min:5',
+            'message' => 'required|min:20',
         ]);
 
         // 2. Simpan ke database

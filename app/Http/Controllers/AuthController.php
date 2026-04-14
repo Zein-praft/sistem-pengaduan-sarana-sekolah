@@ -17,16 +17,18 @@ class AuthController extends Controller
 
     // Proses Login Siswa (Manual Session)
     public function loginSiswa(Request $request) {
-        $siswa = Siswa::where('nis', $request->nis)
-                ->where('tgl_lahir', $request->tgl_lahir)
-                ->first();
+        // Cari siswa berdasarkan NIS
+        $siswa = Siswa::where('nis', $request->nis)->first();
 
-        if ($siswa) {
-            // Simpan data ke session
-            Session::put('siswa_id', $siswa->id);
-            Session::put('nama', $siswa->nama);
-            Session::put('role', 'siswa');
-            
+        // Cek apakah siswa ada DAN tanggal lahirnya cocok
+        if ($siswa && $siswa->tgl_lahir == $request->tgl_lahir) {
+            // Simpan ke Session
+            session([
+                'siswa_id' => $siswa->id,
+                'nama'     => $siswa->nama,
+                'role'     => 'siswa'
+            ]);
+
             return redirect()->route('siswa.dashboard');
         }
 
@@ -39,11 +41,10 @@ class AuthController extends Controller
     }
 
     // Proses Login Admin (Pake Auth Bawaan Laravel)
-    public function loginAdmin(Request $request)
-    {
+    public function loginAdmin(Request $request) {
         $credentials = $request->validate([
             'email' => 'required|email',
-            'password' => 'required',
+            'password' => 'required'
         ]);
 
         if (Auth::attempt($credentials)) {
@@ -51,14 +52,7 @@ class AuthController extends Controller
             return redirect()->route('admin.dashboard');
         }
 
-        return back()->with('error', 'Email atau password salah.');
-    }
-
-    public function logoutAdmin(Request $request) {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        return redirect()->route('admin.login');
+        return back()->with('error', 'Email atau Password admin salah!');
     }
 
     // Logout Semua
