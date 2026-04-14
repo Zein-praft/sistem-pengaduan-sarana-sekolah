@@ -69,7 +69,9 @@
                     <label>Jurusan</label>
                     <input type="text" name="jurusan" required placeholder="Contoh: PPLG">
                 </div>
-                <button type="submit" class="btn-add">Simpan</button>
+                <div class="form-group">
+                    <button type="submit" class="btn-add">Simpan</button>
+                </div>
             </form>
         </div>
 
